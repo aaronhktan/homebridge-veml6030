@@ -4,6 +4,8 @@ This is a Homebridge plugin for VEML6030 light sensor, working on the Raspberry 
 
 It uses the Linux SMBus APIs.
 
+<img src="/docs/eve.png?raw=true" style="margin: 5px"> <img src="/docs/home.png?raw=true" style="margin: 5px">
+
 ## Configuration
 
 | Field name           | Description                                                   | Type / Unit    | Default value       | Required? |
