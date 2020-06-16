@@ -25,20 +25,21 @@ static double lux_table[6][4] = {
 };
 
 static int i2c_smbus_access(int file, char read_write, __u8 command,
-		                 int size, union i2c_smbus_data *data)
+                            int size, union i2c_smbus_data *data)
 {
-	struct i2c_smbus_ioctl_data args;
-	__s32 err;
+  struct i2c_smbus_ioctl_data args;
+  __s32 err;
 
-	args.read_write = read_write;
-	args.command = command;
-	args.size = size;
-	args.data = data;
+  args.read_write = read_write;
+  args.command = command;
+  args.size = size;
+  args.data = data;
 
-	err = ioctl(file, I2C_SMBUS, &args);
-	if (err == -1)
-		err = -errno;
-	return err;
+  err = ioctl(file, I2C_SMBUS, &args);
+  if (err == -1) {
+    err = -errno;
+  }
+  return err;
 }
 
 static int i2c_write(int fd, uint8_t command, uint16_t word) {
