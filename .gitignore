@@ -1,6 +1,10 @@
 # Ignore build directories
 build/
 node_modules/
+*.o
+*.d
+*veml6030-cli
+*debug
 
 # Ignore macOS trash
 .DS_Store
