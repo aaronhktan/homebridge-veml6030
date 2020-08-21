@@ -14,7 +14,7 @@ module.exports = (homebridge) => {
   CustomCharacteristic = require('./src/js/customcharacteristic.js')(homebridge);
   FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
-  homebridge.registerAccessory("homebridge-veml6030", "VEML6030", VEML6030Accessory);
+  homebridge.registerAccessory('homebridge-veml6030', 'VEML6030', VEML6030Accessory);
 }
 
 function VEML6030Accessory(log, config) {
@@ -42,17 +42,17 @@ function VEML6030Accessory(log, config) {
   // Services
   let informationService = new Service.AccessoryInformation();
   informationService
-    .setCharacteristic(Characteristic.Manufacturer, "Vishay")
-    .setCharacteristic(Characteristic.Model, "VEML6030")
+    .setCharacteristic(Characteristic.Manufacturer, 'Vishay')
+    .setCharacteristic(Characteristic.Model, 'VEML6030')
     .setCharacteristic(Characteristic.SerialNumber, `${os.hostname}-${this.i2cAdaptor.split('/').pop()}`)
     .setCharacteristic(Characteristic.FirmwareRevision, require('./package.json').version);
 
-  let alsService = new Service.LightSensor("ALS", "als");
+  let alsService = new Service.LightSensor('ALS', 'als');
   if (this.enableFakeGato && !this.useWhite) {
     alsService.addCharacteristic(CustomCharacteristic.AtmosphericPressureLevel);
   }
 
-  let whiteService = new Service.LightSensor("White", "white");
+  let whiteService = new Service.LightSensor('White', 'white');
   if (this.enableFakeGato && this.useWhite) {
     whiteService.addCharacteristic(CustomCharacteristic.AtmosphericPressureLevel);
   }
@@ -63,7 +63,7 @@ function VEML6030Accessory(log, config) {
 
   // Start FakeGato for logging historical data
   if (this.enableFakeGato) {
-    this.fakeGatoHistoryService = new FakeGatoHistoryService("weather", this, {
+    this.fakeGatoHistoryService = new FakeGatoHistoryService('weather', this, {
       storage: 'fs',
       folder: this.fakeGatoStoragePath
     });
@@ -81,7 +81,7 @@ function VEML6030Accessory(log, config) {
 }
 
 // Error checking and averaging when saving als and white
-Object.defineProperty(VEML6030Accessory.prototype, "als", {
+Object.defineProperty(VEML6030Accessory.prototype, 'als', {
   set: function(alsReading) {
     // Calculate running average of als over the last 30 samples
     this._alsCounter++;
@@ -122,7 +122,7 @@ Object.defineProperty(VEML6030Accessory.prototype, "als", {
   }
 });
 
-Object.defineProperty(VEML6030Accessory.prototype, "white", {
+Object.defineProperty(VEML6030Accessory.prototype, 'white', {
   set: function(whiteReading) {
     // Calculate running average of white over the last 30 samples
     this._whiteCounter++;
@@ -164,12 +164,12 @@ Object.defineProperty(VEML6030Accessory.prototype, "white", {
 // Sets up MQTT client based on config loaded in constructor
 VEML6030Accessory.prototype.setUpMQTT = function() {
   if (!this.enableMQTT) {
-    this.log.info("MQTT not enabled");
+    this.log.info('MQTT not enabled');
     return;
   }
 
   if (!this.mqttConfig) {
-    this.log.error("No MQTT config found");
+    this.log.error('No MQTT config found');
     return;
   }
 
@@ -178,10 +178,10 @@ VEML6030Accessory.prototype.setUpMQTT = function() {
   this.whiteTopic = this.mqttConfig.whiteTopic || 'VEML6030/white';
 
   this.mqttClient = mqtt.connect(this.mqttUrl);
-  this.mqttClient.on("connect", () => {
+  this.mqttClient.on('connect', () => {
     this.log(`MQTT client connected to ${this.mqttUrl}`);
   });
-  this.mqttClient.on("error", (err) => {
+  this.mqttClient.on('error', (err) => {
     this.log(`MQTT client error: ${err}`);
     client.end();
   });
@@ -190,7 +190,7 @@ VEML6030Accessory.prototype.setUpMQTT = function() {
 // Sends data to MQTT broker; must have called setupMQTT() previously
 VEML6030Accessory.prototype.publishToMQTT = function(topic, value) {
   if (!this.mqttClient.connected || !topic) {
-    this.log.error("MQTT client not connected, or no topic or value for MQTT");
+    this.log.error('MQTT client not connected, or no topic or value for MQTT');
     return;
   }
   this.mqttClient.publish(topic, String(value));
